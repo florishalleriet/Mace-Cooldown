@@ -43,18 +43,70 @@ public class MaceCooldownCommand {
                             return builder.buildFuture();
                         }).executes(context -> {
                             // Parse the input string into a boolean
-                            String enabledStr = StringArgumentType.getString(context, "boolean");
-                            boolean enabled = Boolean.parseBoolean(enabledStr);
+                            String boolStr = StringArgumentType.getString(context, "boolean");
+                            boolean bool = Boolean.parseBoolean(boolStr);
 
                             // Update config value and save
-                            MaceCooldown.CONFIG.enabled = enabled;
+                            MaceCooldown.CONFIG.enabled = bool;
                             MaceCooldown.CONFIG.save();
 
                             // Send feedback to the command executor
                             context.getSource()
-                                    .sendSuccess(() -> Component.literal("Enabled: " + enabled),
+                                    .sendSuccess(() -> Component.literal("Enabled: " + bool),
                                             true);
                             return 1;
-                        }))));
+                        })))
+
+                // Toggle onlyPreventSmash
+                .then(literal("onlyPreventSmash").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .then(argument("boolean", StringArgumentType.word()).suggests((context, builder) -> {
+                            // Provide tab-completion suggestions
+                            builder.suggest("true");
+                            builder.suggest("false");
+                            return builder.buildFuture();
+                        }).executes(context -> {
+                            // Parse the input string into a boolean
+                            String boolStr = StringArgumentType.getString(context, "boolean");
+                            boolean bool = Boolean.parseBoolean(boolStr);
+
+                            // Update config value and save
+                            MaceCooldown.CONFIG.onlyPreventSmash = bool;
+                            MaceCooldown.CONFIG.save();
+
+                            // Send feedback to the command executor
+                            context.getSource()
+                                    .sendSuccess(
+                                            () -> Component.literal((bool ? "Only smash"
+                                                    : "All mace") + " attacks are prevented whilst on cooldown"),
+                                            true);
+                            return 1;
+                        })))
+
+                // Toggle onlyApplyOnSmash
+                .then(literal("onlyApplyOnSmash").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .then(argument("boolean", StringArgumentType.word()).suggests((context, builder) -> {
+                            // Provide tab-completion suggestions
+                            builder.suggest("true");
+                            builder.suggest("false");
+                            return builder.buildFuture();
+                        }).executes(context -> {
+                            // Parse the input string into a boolean
+                            String boolStr = StringArgumentType.getString(context, "boolean");
+                            boolean bool = Boolean.parseBoolean(boolStr);
+
+                            // Update config value and save
+                            MaceCooldown.CONFIG.onlyApplyOnSmash = bool;
+                            MaceCooldown.CONFIG.save();
+
+                            // Send feedback to the command executor
+                            context.getSource()
+                                    .sendSuccess(
+                                            () -> Component.literal((bool ? "Only smash"
+                                                    : "All mace") + " attacks will apply the cooldown"),
+                                            true);
+                            return 1;
+                        })))
+
+        );
     }
 }

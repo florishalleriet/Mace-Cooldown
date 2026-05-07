@@ -30,7 +30,7 @@ public class MaceItemBlockerMixin {
 			return;
 
 		// Return if the player did not meet the smash requirements
-		if (!(attacker.fallDistance > 1.5 && !attacker.isFallFlying()))
+		if (MaceCooldown.CONFIG.onlyPreventSmash && !(attacker.fallDistance > 1.5 && !attacker.isFallFlying()))
 			return;
 
 		// Get the mace in the player's main hand

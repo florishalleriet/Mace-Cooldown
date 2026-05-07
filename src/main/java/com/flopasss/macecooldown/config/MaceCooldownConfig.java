@@ -12,6 +12,8 @@ import net.fabricmc.loader.api.FabricLoader;
 public class MaceCooldownConfig {
     public boolean enabled = true; // The mod is enabled by default
     public int cooldownTicks = 600; // Default cooldown of 30 seconds (600 ticks)
+    public boolean onlyPreventSmash = true; // By default only the smash attack is prevented whilst on cooldown
+    public boolean onlyApplyOnSmash = true; // By default only the smash attack will apply the cooldown
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create(); // For JSON serialization
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir()
