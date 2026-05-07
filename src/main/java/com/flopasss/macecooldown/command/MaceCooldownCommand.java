@@ -17,61 +17,88 @@ import static net.minecraft.commands.Commands.literal;
 import static net.minecraft.commands.Commands.argument;
 
 public class MaceCooldownCommand {
-    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(literal("maceCooldown")
+        public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+                dispatcher.register(literal("maceCooldown")
 
-                // Cooldown length
-                .then(literal("duration").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
-                        .then(argument("ticks", IntegerArgumentType.integer(0)).suggests((context, builder) -> {
-                            // Provide tab-completion suggestions
-                            builder.suggest(MaceCooldown.CONFIG.cooldownTicks);
-                            return builder.buildFuture();
-                        }).executes(ctx -> {
-                            int ticks = IntegerArgumentType.getInteger(ctx, "ticks");
+                                // Cooldown length
+                                .then(literal("duration").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                                                .then(argument("ticks", IntegerArgumentType.integer(0))
+                                                                .suggests((context, builder) -> {
+                                                                        // Provide tab-completion suggestions
+                                                                        builder.suggest(MaceCooldown.CONFIG.cooldownTicks);
+                                                                        return builder.buildFuture();
+                                                                }).executes(context -> {
+                                                                        int ticks = IntegerArgumentType.getInteger(
+                                                                                        context,
+                                                                                        "ticks");
 
-                            MaceCooldown.CONFIG.cooldownTicks = ticks;
-                            MaceCooldown.CONFIG.save();
+                                                                        MaceCooldown.CONFIG.cooldownTicks = ticks;
+                                                                        MaceCooldown.CONFIG.save();
 
-                            ctx.getSource().sendSuccess(
-                                    () -> Component.literal("The duration is now " + ticks + " ticks"),
-                                    true);
-                            return 1;
-                        })))
+                                                                        context.getSource().sendSuccess(
+                                                                                        () -> Component.literal(
+                                                                                                        "The duration is now "
+                                                                                                                        + ticks
+                                                                                                                        + " ticks"),
+                                                                                        true);
+                                                                        return 1;
+                                                                })))
 
-                // Config boolean toggles
-                .then(createConfigToggle("enabled",
-                        val -> MaceCooldown.CONFIG.enabled = val,
-                        val -> "The mod has been " + (val ? "enabled" : "disabled")))
-                .then(createConfigToggle("onlyPreventSmash",
-                        val -> MaceCooldown.CONFIG.onlyPreventSmash = val,
-                        val -> (val ? "Only smash" : "All mace") + " attacks are prevented whilst on cooldown"))
-                .then(createConfigToggle("onlyApplyOnSmash",
-                        val -> MaceCooldown.CONFIG.onlyApplyOnSmash = val,
-                        val -> (val ? "Only smash" : "All mace") + " attacks will apply the cooldown"))
+                                // Player preference
+                                .then(literal("preference").then(Commands.argument("boolean", BoolArgumentType.bool())
+                                                .executes(context -> {
+                                                        boolean bool = BoolArgumentType.getBool(context, "boolean");
 
-        );
-    }
+                                                        context.getSource().sendSuccess(
+                                                                        () -> Component.literal(
+                                                                                        "Mace Cooldown preference set to: "
+                                                                                                        + (bool ? "§aENABLED"
+                                                                                                                        : "§cDISABLED")),
+                                                                        false);
+                                                        return 1;
+                                                })))
 
-    private static LiteralArgumentBuilder<CommandSourceStack> createConfigToggle(
-            String name,
-            Consumer<Boolean> setter,
-            Function<Boolean, String> messageFactory) {
+                                // Config boolean toggles
+                                .then(createConfigToggle("enabled",
+                                                val -> MaceCooldown.CONFIG.enabled = val,
+                                                val -> "The mod has been " + (val ? "enabled" : "disabled")))
+                                .then(createConfigToggle("onlyPreventSmash",
+                                                val -> MaceCooldown.CONFIG.onlyPreventSmash = val,
+                                                val -> (val ? "Only smash" : "All mace")
+                                                                + " attacks are prevented whilst on cooldown"))
+                                .then(createConfigToggle("onlyApplyOnSmash",
+                                                val -> MaceCooldown.CONFIG.onlyApplyOnSmash = val,
+                                                val -> (val ? "Only smash" : "All mace")
+                                                                + " attacks will apply the cooldown"))
+                                .then(createConfigToggle("playerCooldownPreference",
+                                                val -> MaceCooldown.CONFIG.playerCooldownPreference = val,
+                                                val -> "The player cooldown preference functionality has been "
+                                                                + (val ? "enabled" : "disabled")))
 
-        return Commands.literal(name)
-                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
-                .then(Commands.argument("boolean", BoolArgumentType.bool())
-                        .executes(context -> {
-                            boolean bool = BoolArgumentType.getBool(context, "boolean");
+                );
+        }
 
-                            // Update config via the setter
-                            setter.accept(bool);
-                            MaceCooldown.CONFIG.save();
+        private static LiteralArgumentBuilder<CommandSourceStack> createConfigToggle(
+                        String name,
+                        Consumer<Boolean> setter,
+                        Function<Boolean, String> messageFactory) {
 
-                            // Send feedback using the factory
-                            context.getSource().sendSuccess(
-                                    () -> Component.literal(messageFactory.apply(bool)),
-                                    true);
-                            return 1;
-                        }));
-    }
+                return Commands.literal(name)
+                                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                                .then(Commands.argument("boolean", BoolArgumentType.bool())
+                                                .executes(context -> {
+                                                        boolean bool = BoolArgumentType.getBool(context, "boolean");
+
+                                                        // Update config via the setter
+                                                        setter.accept(bool);
+                                                        MaceCooldown.CONFIG.save();
+
+                                                        // Send feedback using the factory
+                                                        context.getSource().sendSuccess(
+                                                                        () -> Component.literal(
+                                                                                        messageFactory.apply(bool)),
+                                                                        true);
+                                                        return 1;
+                                                }));
+        }
 }

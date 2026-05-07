@@ -14,6 +14,7 @@ public class MaceCooldownConfig {
     public int cooldownTicks = 600; // Default cooldown of 30 seconds (600 ticks)
     public boolean onlyPreventSmash = true; // By default only the smash attack is prevented whilst on cooldown
     public boolean onlyApplyOnSmash = true; // By default only the smash attack will apply the cooldown
+    public boolean playerCooldownPreference = false; // By default the player cooldown preference functionality is off
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create(); // For JSON serialization
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir()
