@@ -4,7 +4,8 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"MaceItemStarterMixin",
-		"MaceItemBlockerMixin"
+		"MaceItemBlockerMixin",
+		"PlayerDataMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

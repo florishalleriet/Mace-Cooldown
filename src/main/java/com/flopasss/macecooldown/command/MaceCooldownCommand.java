@@ -1,6 +1,7 @@
 package com.flopasss.macecooldown.command;
 
 import com.flopasss.macecooldown.MaceCooldown;
+import com.flopasss.macecooldown.data.MaceCooldownPlayerData;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -9,6 +10,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -49,12 +51,22 @@ public class MaceCooldownCommand {
                                                 .executes(context -> {
                                                         boolean bool = BoolArgumentType.getBool(context, "boolean");
 
-                                                        context.getSource().sendSuccess(
-                                                                        () -> Component.literal(
-                                                                                        "Mace Cooldown preference set to: "
-                                                                                                        + (bool ? "§aENABLED"
-                                                                                                                        : "§cDISABLED")),
-                                                                        false);
+                                                        if (context.getSource().getEntity() instanceof Player player) {
+                                                                ((MaceCooldownPlayerData) player)
+                                                                                .maceCooldown_setPreference(bool);
+
+                                                                context.getSource().sendSuccess(
+                                                                                () -> Component.literal(
+                                                                                                "Mace Cooldown preference set to: "
+                                                                                                                + (bool ? "§aENABLED"
+                                                                                                                                : "§cDISABLED")),
+                                                                                false);
+                                                        } else {
+                                                                context.getSource().sendFailure(
+                                                                                Component.literal(
+                                                                                                "This command must be run by a player"));
+                                                        }
+
                                                         return 1;
                                                 })))
 

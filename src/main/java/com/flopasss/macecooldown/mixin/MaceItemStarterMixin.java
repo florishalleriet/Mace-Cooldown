@@ -1,6 +1,7 @@
 package com.flopasss.macecooldown.mixin;
 
 import com.flopasss.macecooldown.MaceCooldown;
+import com.flopasss.macecooldown.data.MaceCooldownPlayerData;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,6 +36,12 @@ public class MaceItemStarterMixin {
 
 		// Return if the target is not a player
 		if (!(target instanceof Player))
+			return;
+
+		// Check if the preferences
+		if (MaceCooldown.CONFIG.playerCooldownPreference
+				&& (!((MaceCooldownPlayerData) attacker).maceCooldown_hasPreference()
+						&& !((MaceCooldownPlayerData) target).maceCooldown_hasPreference()))
 			return;
 
 		// Return if the mace is already on cooldown
