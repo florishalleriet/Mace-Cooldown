@@ -33,10 +33,8 @@ public class MaceItemBlockerMixin {
 		if (MaceCooldown.CONFIG.onlyPreventSmash && !(attacker.fallDistance > 1.5 && !attacker.isFallFlying()))
 			return;
 
-		// Get the mace in the player's main hand
-		ItemStack mace = player.getMainHandItem();
 		// Return if the item in the player's main hand is not on cooldown
-		if (!player.getCooldowns().isOnCooldown(mace))
+		if (!player.getCooldowns().isOnCooldown(player.getMainHandItem()))
 			return;
 
 		// Cancel the injected method

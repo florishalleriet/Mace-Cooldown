@@ -30,12 +30,12 @@ public class MaceItemStarterMixin {
 		if (!(attacker instanceof Player player))
 			return;
 
-		// Return if the player did not meet the smash requirements
-		if (MaceCooldown.CONFIG.onlyApplyOnSmash && !(attacker.fallDistance > 1.5 && !attacker.isFallFlying()))
-			return;
-
 		// Return if the target is not a player
 		if (!(target instanceof Player))
+			return;
+
+		// Return if the player did not meet the smash requirements
+		if (MaceCooldown.CONFIG.onlyApplyOnSmash && !(attacker.fallDistance > 1.5 && !attacker.isFallFlying()))
 			return;
 
 		// Check if the preferences
