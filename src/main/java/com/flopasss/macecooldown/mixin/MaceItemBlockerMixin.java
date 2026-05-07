@@ -17,6 +17,10 @@ public class MaceItemBlockerMixin {
 	@Inject(at = @At("HEAD"), method = "canSmashAttack")
 
 	private static void interceptCanSmashAttack(LivingEntity attacker, CallbackInfoReturnable<Boolean> callbackInfo) {
+		// Return if the mod is disabled
+		if (!MaceCooldown.CONFIG.enabled)
+			return;
+
 		// Return if the cooldown is 0 or lower
 		if (MaceCooldown.CONFIG.cooldownTicks <= 0)
 			return;

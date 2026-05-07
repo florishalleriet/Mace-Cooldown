@@ -17,6 +17,10 @@ public class MaceItemStarterMixin {
 	@Inject(method = "hurtEnemy", at = @At("TAIL"))
 
 	private void onHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker, CallbackInfo callbackInfo) {
+		// Return if the mod is disabled
+		if (!MaceCooldown.CONFIG.enabled)
+			return;
+
 		// Return if the cooldown is 0 or lower
 		if (MaceCooldown.CONFIG.cooldownTicks <= 0)
 			return;

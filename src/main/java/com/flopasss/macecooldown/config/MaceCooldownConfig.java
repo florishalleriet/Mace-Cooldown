@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class MaceCooldownConfig {
+    public boolean enabled = true; // The mod is enabled by default
     public int cooldownTicks = 600; // Default cooldown of 30 seconds (600 ticks)
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create(); // For JSON serialization
