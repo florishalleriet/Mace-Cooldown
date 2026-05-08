@@ -114,45 +114,38 @@ public class MaceCooldownCommand {
                             )
                         )
                         .then(
-                            literal("info")
-                                .requires(
-                                    Commands.hasPermission(
-                                        Commands.LEVEL_GAMEMASTERS
-                                    )
-                                )
-                                .then(
-                                    Commands.argument(
-                                        "player",
-                                        EntityArgument.player()
-                                    ).executes(context -> {
-                                        Player target =
-                                            EntityArgument.getPlayer(
-                                                context,
-                                                "player"
-                                            );
+                            literal("info").then(
+                                Commands.argument(
+                                    "player",
+                                    EntityArgument.player()
+                                ).executes(context -> {
+                                    Player target = EntityArgument.getPlayer(
+                                        context,
+                                        "player"
+                                    );
 
-                                        MaceCooldownPlayerData data =
-                                            (MaceCooldownPlayerData) target;
+                                    MaceCooldownPlayerData data =
+                                        (MaceCooldownPlayerData) target;
 
-                                        context
-                                            .getSource()
-                                            .sendSuccess(
-                                                () ->
-                                                    Component.literal(
-                                                        target
-                                                                .getName()
-                                                                .getString() +
-                                                            "'s Mace Cooldown preference: " +
-                                                            (data.maceCooldown_hasPreference()
-                                                                ? "§aENABLED"
-                                                                : "§cDISABLED")
-                                                    ),
-                                                false
-                                            );
+                                    context
+                                        .getSource()
+                                        .sendSuccess(
+                                            () ->
+                                                Component.literal(
+                                                    target
+                                                            .getName()
+                                                            .getString() +
+                                                        "'s Mace Cooldown preference: " +
+                                                        (data.maceCooldown_hasPreference()
+                                                            ? "§aENABLED"
+                                                            : "§cDISABLED")
+                                                ),
+                                            false
+                                        );
 
-                                        return 1;
-                                    })
-                                )
+                                    return 1;
+                                })
+                            )
                         )
                 )
                 // Config boolean toggles
